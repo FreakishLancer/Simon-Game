@@ -35,26 +35,43 @@ main {
   border: 3vmin solid black;
   background: linear-gradient(to right top, lightgray, white); }
 
+#round-num {
+  font: bold 3vmin Exo, sans-serif;
+  position: absolute;
+  top: 7.5%;
+  left: 41%;
+  padding: .4vmin .5vmin;
+  border-radius: 25%;
+  background: black;
+  color: white; }
+
 h1 {
   font: bolder 4vmin Exo, sans-serif;
   position: absolute;
-  top: 22.5%;
+  top: 27.5%;
   left: 9%;
   text-transform: uppercase; }
 
 button {
-  font: bold 2vmin Exo, sans-serif;
+  font: bold 2vmin Exo, sans-serif !important;
   position: absolute;
-  background: darkgray !important; }
+  background: darkgray !important;
+  padding: 0 !important; }
   button:hover {
     cursor: pointer;
     background: darkgray; }
 
 #strict-mode {
-  top: 50%;
+  height: 17%;
+  width: 60%;
+  line-height: 17%;
+  top: 52%;
   left: 20.5%; }
 
 #power {
+  height: 17%;
+  width: 32.5%;
+  line-height: 17%;
   top: 75%;
   left: 33.5%; }
 
