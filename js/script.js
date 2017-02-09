@@ -1,21 +1,17 @@
-const isFirefox = typeof InstallTrigger !== "undefined";
-
-console.log(isFirefox);
+const $red = $("[data-color='red']");
+const $green = $("[data-color='green']");
+const $yellow = $("[data-color='yellow']");
+const $blue = $("[data-color='blue']");
 
 let isStrictMode = false;
 let powerOn = false;
-
-let $red = $("[data-color='red']");
-let $green = $("[data-color='green']");
-let $yellow = $("[data-color='yellow']");
-let $blue = $("[data-color='blue']");
 
 let c;
 let osc;
 let g;
 
 function readySoundMaker() {
-    isFirefox ? c = new AudioContext() : c = new (window.AudioContext || window.webkitAudioContext)();
+    c = new AudioContext();
     osc = c.createOscillator();
     g = c.createGain();
     osc.type = "triangle";
@@ -105,22 +101,3 @@ $(document).ready(() => {
         }
     });
 });
-
-// Pitch to Frequency Mappings
-// B3 246.94
-// G3 196.00
-// E3 164.81
-// C3 130.81
-
-/*
-
-c = new AudioContext();
-osc = c.createOscillator();
-osc.frequency.value = 247;
-osc.type = "sawtooth";
-osc.connect(c.destination);
-osc.start(0);
-
-
-
-*/
