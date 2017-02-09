@@ -42,69 +42,6 @@ $(document).ready(() => {
         }
     });
 
-    $(document).keydown(key => {
-
-        if (key.keyCode === 38 || key.keyCode === 87) {
-            $(".quarter-circle").not($red).addClass("darkened");
-            $red.removeClass("darkened");
-            if (!powerOn) {
-                osc.frequency.value = $red.data("frequency");
-                g.gain.value = .25;
-                $(key.target).keyup(key => {
-                    g.gain.value = 0;
-                    $red.addClass("darkened");
-                })
-            } else {
-                return;
-            }
-        }
-        else if (key.keyCode === 39 || key.keyCode === 68) {
-            $(".quarter-circle").not($green).addClass("darkened");
-            $green.removeClass("darkened");
-            if (!powerOn) {
-                osc.frequency.value = $green.data("frequency");
-                g.gain.value = .25;
-
-                $(key.target).keyup(key => {
-                    g.gain.value = 0;
-                    $green.addClass("darkened");
-                })
-            } else {
-                return;
-            }
-        }
-        else if (key.keyCode === 37 || key.keyCode === 65) {
-            $(".quarter-circle").not($yellow).addClass("darkened");
-            $yellow.removeClass("darkened");
-            if (!powerOn) {
-                osc.frequency.value = $yellow.data("frequency");
-                g.gain.value = .25;
-
-                $(key.target).keyup(key => {
-                    g.gain.value = 0;
-                    $yellow.addClass("darkened");
-                })
-            } else {
-                return;
-            }
-        }
-        else if (key.keyCode === 40 || key.keyCode === 83) {
-            $(".quarter-circle").not($blue).addClass("darkened");
-            $blue.removeClass("darkened");
-            if (!powerOn) {
-                osc.frequency.value = $blue.data("frequency");
-                g.gain.value = .25;
-
-                $(key.target).keyup(key => {
-                    g.gain.value = 0;
-                    $blue.addClass("darkened");
-                })
-            } else {
-                return;
-            }
-        }
-    });
-
     $("#strict-mode").on("click", () => {
         if (!isStrictMode) {
             $("#strict-mode span").text("On");
