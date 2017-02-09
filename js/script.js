@@ -10,12 +10,14 @@ let c;
 let osc;
 let g;
 
-function readySoundMaker() {
+function readySoundMaker() { // Prepares a muted oscillator.
     c = new AudioContext();
     osc = c.createOscillator();
     g = c.createGain();
     osc.type = "triangle";
-    g.gain.value = .25;
+    g.gain.value = 0;
+    osc.connect(g);
+    g.connect(c.destination);
     osc.start(0);
 }
 
@@ -25,52 +27,78 @@ $(document).ready(() => {
 
     $(".quarter.circle").css("transition-duration", ".1s;"); // Stops weird border-radius transition before script is loaded.
 
-    $(".quarter-circle").on("click", button => {
+    $(".quarter-circle").on("mousedown", button => {
         $(".quarter-circle").not(button.target).addClass("darkened");
         $(button.target).removeClass("darkened");
         if (!powerOn) {
             osc.frequency.value = $(button.target).data("frequency");
-            osc.connect(g);
-            g.connect(c.destination);
+            g.gain.value = .25;
+            $(button.target).on("mouseup", button => {
+                g.gain.value = 0;
+                $(button.target).addClass("darkened");
+            });
         } else {
             return;
         }
     });
 
-    $(document).keypress(key => {
+    $(document).keydown(key => {
 
         if (key.keyCode === 38 || key.keyCode === 87) {
+            $(".quarter-circle").not($red).addClass("darkened");
+            $red.removeClass("darkened");
             if (!powerOn) {
                 osc.frequency.value = $red.data("frequency");
-                osc.connect(g);
-                g.connect(c.destination);
+                g.gain.value = .25;
+                $(key.target).keyup(key => {
+                    g.gain.value = 0;
+                    $red.addClass("darkened");
+                })
             } else {
                 return;
             }
         }
         else if (key.keyCode === 39 || key.keyCode === 68) {
+            $(".quarter-circle").not($green).addClass("darkened");
+            $green.removeClass("darkened");
             if (!powerOn) {
                 osc.frequency.value = $green.data("frequency");
-                osc.connect(g);
-                g.connect(c.destination);
+                g.gain.value = .25;
+
+                $(key.target).keyup(key => {
+                    g.gain.value = 0;
+                    $green.addClass("darkened");
+                })
             } else {
                 return;
             }
         }
         else if (key.keyCode === 37 || key.keyCode === 65) {
+            $(".quarter-circle").not($yellow).addClass("darkened");
+            $yellow.removeClass("darkened");
             if (!powerOn) {
                 osc.frequency.value = $yellow.data("frequency");
-                osc.connect(g);
-                g.connect(c.destination);
+                g.gain.value = .25;
+
+                $(key.target).keyup(key => {
+                    g.gain.value = 0;
+                    $yellow.addClass("darkened");
+                })
             } else {
                 return;
             }
         }
         else if (key.keyCode === 40 || key.keyCode === 83) {
+            $(".quarter-circle").not($blue).addClass("darkened");
+            $blue.removeClass("darkened");
             if (!powerOn) {
                 osc.frequency.value = $blue.data("frequency");
-                osc.connect(g);
-                g.connect(c.destination);
+                g.gain.value = .25;
+
+                $(key.target).keyup(key => {
+                    g.gain.value = 0;
+                    $blue.addClass("darkened");
+                })
             } else {
                 return;
             }
@@ -88,7 +116,7 @@ $(document).ready(() => {
     });
 
     $("#power").on("click", () => {
-        osc.stop();
+        g.gain.value = 0;
         if (!powerOn) {
             $(".quarter-circle").removeClass("darkened");
             $("#strict-mode").prop("disabled", true);
