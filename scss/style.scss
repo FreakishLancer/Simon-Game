@@ -88,7 +88,7 @@ button {
 }
 
 #strict-mode.active {
-    background: linear-gradient(to left top, $red, white) !important;
+    background: linear-gradient(to left top, $yellow + 75, white) !important;
 }
 
 #power {
@@ -100,7 +100,7 @@ button {
 }
 
 #power.active {
-    background: linear-gradient(to left top, $green, white) !important;
+    background: linear-gradient(to left top, $green + 75, white) !important;
 }
 
 .quarter-circle {

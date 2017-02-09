@@ -1,7 +1,25 @@
-let isStrictMode = false,
-    powerOn = false;
+let isStrictMode = false;
+let powerOn = false;
+let $red = $("[data-color='red']");
+let $green = $("[data-color='green']");
+let $yellow = $("[data-color='yellow']");
+let $blue = $("[data-color='blue']");
+
+let c = new AudioContext();
+let osc = c.createOscillator();
+osc.type = "square";
+osc.connect(c.destination);
 
 $(document).ready(() => {
+
+    $(".quarter-circle").on("click", button => {
+        if (!powerOn) {
+            osc.frequency.value = $(button.target).data("frequency");
+            osc.start(0);
+        } else {
+            return;
+        }
+    });
 
     $("#strict-mode").on("click", () => {
         if (!isStrictMode) {
@@ -14,17 +32,17 @@ $(document).ready(() => {
     });
 
     $("#power").on("click", () => {
+        osc.stop();
         if (!powerOn) {
             $("#strict-mode").prop("disabled", true);
             powerOn = true;
+            console.log(powerOn);
         } else {
             $("#strict-mode").prop("disabled", false);
             powerOn = false;
+            console.log(powerOn);
         }
-
-
     });
-
 });
 
 // Pitch to Frequency Mappings
@@ -37,11 +55,9 @@ $(document).ready(() => {
 
 c = new AudioContext();
 osc = c.createOscillator();
-gainer = c.createGain();
-gainer.gain.value = .15;
-osc.frequency.value = 330;
+osc.frequency.value = 247;
 osc.type = "sawtooth";
-osc.connect(gainer);
+osc.connect(c.destination);
 osc.start(0);
 
 

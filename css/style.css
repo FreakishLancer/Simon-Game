@@ -69,7 +69,7 @@ button {
   left: 20.5%; }
 
 #strict-mode.active {
-  background: linear-gradient(to left top, #ff5e5e, white) !important; }
+  background: linear-gradient(to left top, #ffffa9, white) !important; }
 
 #power {
   height: 17%;
@@ -79,7 +79,7 @@ button {
   left: 33.5%; }
 
 #power.active {
-  background: linear-gradient(to left top, #4ed44e, white) !important; }
+  background: linear-gradient(to left top, #99ff99, white) !important; }
 
 .quarter-circle {
   flex: 0 0 50%;
