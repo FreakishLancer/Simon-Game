@@ -63,12 +63,12 @@ h1 {
     font: bolder 4vmin Exo, sans-serif;
     position: absolute;
     top: 27.5%;
-    left: 9%;
+    left: 27.5%;
     text-transform: uppercase;
 }
 
 button {
-    font: bold 2vmin Exo, sans-serif !important;
+    font: 2vmin Exo, sans-serif !important;
     position: absolute;
     background: darkgray !important;
     padding: 0 !important;
@@ -87,6 +87,10 @@ button {
     left: 20.5%;
 }
 
+#strict-mode.active {
+    background: linear-gradient(to left top, $red, white) !important;
+}
+
 #power {
     height: 17%;
     width: 32.5%;
@@ -95,8 +99,8 @@ button {
     left: 33.5%;
 }
 
-button.active {
-    background: lightgreen !important;
+#power.active {
+    background: linear-gradient(to left top, $green, white) !important;
 }
 
 .quarter-circle {
@@ -111,21 +115,21 @@ button.active {
 }
 
 [data-color="red"] {
-    background: $red;
+    background: linear-gradient(to top, $red, $red - 75);
     border-radius: 100% 0 0 0;
 }
 
 [data-color="green"] {
-    background: $green;
+    background: linear-gradient(to right, $green, $green - 75);
     border-radius: 0 100% 0 0;
 }
 
 [data-color="blue"] {
-    background: $blue;
+    background: linear-gradient(to bottom, $blue, $blue - 75);
     border-radius: 0 0 100% 0;
 }
 
 [data-color="yellow"] {
-    background: $yellow;
+    background: linear-gradient(to left, $yellow, $yellow - 75);
     border-radius: 0 0 0 100%;
 }
