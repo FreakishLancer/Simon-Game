@@ -17,7 +17,7 @@ main {
   border: 1.5vmin solid black;
   border-radius: 100%;
   transform: rotate(45deg);
-  background: black; }
+  background-color: black; }
 
 .control {
   display: flex;
@@ -55,11 +55,12 @@ h1 {
 button {
   font: 2vmin Exo, sans-serif !important;
   position: absolute;
-  background: darkgray !important;
+  background-color: darkgray;
   padding: 0 !important; }
   button:hover {
     cursor: pointer;
-    background: darkgray; }
+    background-color: darkgray;
+    border-color: lightblue; }
 
 #strict-mode {
   height: 17%;
@@ -104,3 +105,6 @@ button {
 [data-color="yellow"] {
   background: linear-gradient(to left, #ffe35e, #b49813);
   border-radius: 0 0 0 100%; }
+
+.darkened {
+  opacity: .65; }

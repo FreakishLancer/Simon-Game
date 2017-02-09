@@ -26,7 +26,7 @@ main {
     border-radius: 100%;
     transform: rotate(45deg);
 
-    background: black;
+    background-color: black;
 }
 
 .control {
@@ -70,12 +70,13 @@ h1 {
 button {
     font: 2vmin Exo, sans-serif !important;
     position: absolute;
-    background: darkgray !important;
+    background-color: darkgray;
     padding: 0 !important;
 
     &:hover {
         cursor: pointer;
-        background: darkgray;
+        background-color: darkgray;
+        border-color: lightblue;
     }
 }
 
@@ -132,4 +133,8 @@ button {
 [data-color="yellow"] {
     background: linear-gradient(to left, $yellow, $yellow - 75);
     border-radius: 0 0 0 100%;
+}
+
+.darkened {
+    opacity: .65;
 }
