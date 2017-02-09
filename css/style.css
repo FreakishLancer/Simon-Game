@@ -7,6 +7,15 @@ body {
   justify-content: center;
   background: linear-gradient(to right top, darkgray, lightgray); }
 
+#blocker {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  opacity: 0;
+  background-color: white;
+  z-index: -1; }
+
 main {
   display: flex;
   flex-wrap: wrap;
@@ -16,7 +25,6 @@ main {
   width: 70vmin;
   border: 1.5vmin solid black;
   border-radius: 100%;
-  transform: rotate(45deg);
   background-color: black; }
 
 .control {
@@ -31,7 +39,6 @@ main {
   top: 25%;
   left: 25%;
   border-radius: 100%;
-  transform: rotate(-45deg);
   border: 3vmin solid black;
   background: linear-gradient(to right top, lightgray, white); }
 
@@ -91,20 +98,28 @@ button {
     cursor: pointer; }
 
 [data-color="red"] {
-  background: linear-gradient(to top, #ff5e5e, #b41313);
-  border-radius: 100% 0 0 0; }
+  background: linear-gradient(to right top, #ff5e5e, #b41313);
+  border-radius: 0 100% 0 0; }
+  [data-color="red"]:hover {
+    background: linear-gradient(to right top, #ffa9a9, #b41313); }
 
 [data-color="green"] {
-  background: linear-gradient(to right, #4ed44e, #038903);
-  border-radius: 0 100% 0 0; }
+  background: linear-gradient(to left top, #4ed44e, #038903);
+  border-radius: 100% 0 0 0; }
+  [data-color="green"]:hover {
+    background: linear-gradient(to left top, #99ff99, #038903); }
 
 [data-color="blue"] {
-  background: linear-gradient(to bottom, #6c53bd, #210872);
+  background: linear-gradient(to right bottom, #6c53bd, #210872);
   border-radius: 0 0 100% 0; }
+  [data-color="blue"]:hover {
+    background: linear-gradient(to right bottom, #b79eff, #210872); }
 
 [data-color="yellow"] {
-  background: linear-gradient(to left, #ffe35e, #b49813);
+  background: linear-gradient(to left bottom, #ffe35e, #b49813);
   border-radius: 0 0 0 100%; }
+  [data-color="yellow"]:hover {
+    background: linear-gradient(to left bottom, #ffffa9, #b49813); }
 
 .darkened {
   opacity: .65; }
