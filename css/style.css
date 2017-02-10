@@ -53,16 +53,26 @@ main {
   background: black;
   color: white; }
 
-h1 {
+h1, .game-text {
   font: bolder 4vmin Exo, sans-serif;
   position: absolute;
   top: 27.5%;
-  left: 27.5%;
   text-transform: uppercase; }
 
-.warning-text {
+h1 {
+  left: 27.5%; }
+
+#wrong-text {
   color: red;
   left: 21.5%; }
+
+#win-text {
+  color: green;
+  left: 18%; }
+
+#correct-text {
+  color: green;
+  left: 17.8%; }
 
 button {
   font: 2vmin Exo, sans-serif !important;

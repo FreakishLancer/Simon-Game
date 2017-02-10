@@ -158,9 +158,11 @@ $(document).ready(() => {
                     g.gain.setTargetAtTime(.65, c.currentTime, .15);
                     osc.frequency.value = 155.56;
 
-                    $("h1").text("WRONG!").addClass("warning-text");
+                    $("h1").addClass("invisible");
+                    $("#wrong-text").removeClass("invisible");
                     setTimeout(() => {
-                        $("h1").text("SIMON").removeClass("warning-text");
+                        $("h1").removeClass("invisible");
+                        $("#wrong-text").addClass("invisible");
                     }, 600);
                     setTimeout(() => {
                         if (currentNumOfNotes >= 20) return;
@@ -175,12 +177,27 @@ $(document).ready(() => {
                 });
 
                 if (isSame && tonesPressed === sequenceToRepeat.length) {
+                    $("h1").addClass("invisible");
+                    $("#correct-text").removeClass("invisible");
+                    setTimeout(() => {
+                        osc.type = "square";
+                        g.gain.setTargetAtTime(0, c.currentTime, .15);
+                        osc.frequency.value = 329.628;
+                    }, 400);
+                    setTimeout(() => {
+                        g.gain.setTargetAtTime(0, c.currentTime, .15);
+                        osc.frequency.value = 220;
+                    }, 600);
+                    setTimeout(() => {
+                        $("h1").removeClass("invisible");
+                        $("#correct-text").addClass("invisible");
+                    }, 800);
                     currentNumOfNotes++;
                     setTimeout(() => {
                         if (currentNumOfNotes >= 20) return;
 
                         song = setInterval(playSequence, 400);
-                    }, 400);
+                    }, 600);
                 }
             });
 
