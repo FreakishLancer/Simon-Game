@@ -14,12 +14,13 @@ let isStrictMode = false;
 let powerOn = false;
 
 let c;
-let conv;
 let osc;
 let g;
 
 let currentSeqInd;
 let currentNumOfNotes;
+let tonesPressed;
+let sequenceToRepeat;
 
 function newSequence() { // Non-consecutive tones.
     let musicSequence = [];
@@ -61,7 +62,7 @@ readySoundMaker();
 
 $(document).ready(() => {
 
-    $(".quarter.circle").css("transition-duration", ".1s;"); // Stops weird border-radius transition before script is loaded.
+    $(".quarter.circle").css("transition-duration", ".1s"); // Stops weird border-radius transition before script is loaded.
 
     $(".quarter-circle").on("mousedown", button => {
         $(".quarter-circle").not(button.target).addClass("darkened");
@@ -98,24 +99,26 @@ $(document).ready(() => {
             powerOn = true;
 
             let musicSequence = newSequence();
-            let sequenceToRepeat = [];
-            let tonesPressed = 0;
+            sequenceToRepeat = [];
             let playerSequence = [];
 
             currentNumOfNotes = 0;
             currentSeqInd = 0;
+            tonesPressed = 0;
 
             let song = setInterval(playSequence, 400);
 
             function playSequence() {
-                $("#blocker").css("z-index", "99");
                 currentSeqInd < 9 ? $("#round-num").text(`0${currentSeqInd + 1}`) : $("#round-num").text(`${currentSeqInd + 1}`);
                 
-                osc.type = "triangle";
-                g.gain.setTargetAtTime(.65, c.currentTime, .15);
-                osc.frequency.value = musicSequence[currentSeqInd];
-                $(".quarter-circle:not(.darkened)").addClass("darkened");
-                $(`.quarter-circle[data-frequency*="${musicSequence[currentSeqInd]}"]`).removeClass("darkened");
+                {
+                    $("#blocker").css("z-index", "99");
+                    osc.type = "triangle";
+                    g.gain.setTargetAtTime(.65, c.currentTime, .15);
+                    osc.frequency.value = musicSequence[currentSeqInd];
+                    $(".quarter-circle:not(.darkened)").addClass("darkened");
+                    $(`.quarter-circle[data-frequency*="${musicSequence[currentSeqInd]}"]`).removeClass("darkened");
+                }
 
                 currentSeqInd++;
                 tonesPressed = 0;
@@ -135,73 +138,83 @@ $(document).ready(() => {
             }
 
             $(".quarter-circle").on("mousedown", button => {
-                {
-                    $(".quarter-circle").not(button.target).addClass("darkened");
-                    $(button.target).removeClass("darkened");
-                    osc.frequency.value = $(button.target).data("frequency");
-                    g.gain.setTargetAtTime(.65, c.currentTime, .15);
+                if (powerOn) {
+                    {
+                        $(".quarter-circle").not(button.target).addClass("darkened");
+                        $(button.target).removeClass("darkened");
+                        osc.frequency.value = $(button.target).data("frequency");
+                        g.gain.setTargetAtTime(.65, c.currentTime, .15);
 
-                    $(button.target).on("mouseup", button => {
-                        g.gain.setTargetAtTime(0, c.currentTime + .15, .15);
-                        $(button.target).addClass("darkened");
-                    });
-                }
-                tonesPressed++;
+                        $(button.target).on("mouseup", button => {
+                            g.gain.setTargetAtTime(0, c.currentTime + .15, .15);
+                            $(button.target).addClass("darkened");
+                        });
+                    }
 
-                playerSequence.push($(button.target).data("frequency"));
+                    tonesPressed++;
 
+                    playerSequence.push($(button.target).data("frequency"));
 
-
-                if (playerSequence[tonesPressed - 1] !== sequenceToRepeat[tonesPressed - 1]) {
-                    console.log("WRONG");
-                    osc.type = "sine";
-                    g.gain.setTargetAtTime(.65, c.currentTime, .15);
-                    osc.frequency.value = 155.56;
-
-                    $("h1").addClass("invisible");
-                    $("#wrong-text").removeClass("invisible");
-                    setTimeout(() => {
-                        $("h1").removeClass("invisible");
-                        $("#wrong-text").addClass("invisible");
-                    }, 500);
-                    setTimeout(() => {
-                        if (currentNumOfNotes >= 20) return;
-
-                        song = setInterval(playSequence, 400);
-                    }, 400);
-                    return;
-                }
-
-                let isSame = (playerSequence.length == sequenceToRepeat.length) && playerSequence.every((frequency, index) => {
-                    return frequency === sequenceToRepeat[index];
-                });
-
-                if (isSame && tonesPressed === sequenceToRepeat.length) {
-                    setTimeout(() => {
-                        $("h1").addClass("invisible");
-                        $("#correct-text").removeClass("invisible");
+                    if (playerSequence[tonesPressed - 1] !== sequenceToRepeat[tonesPressed - 1]) {
+                        g.gain.setTargetAtTime(0, c.currentTime + .3, .15);
+                        $("#blocker").css("z-index", "99");
                         osc.type = "sine";
-                        g.gain.setTargetAtTime(.65, c.currentTime, .1);
-                        osc.frequency.value = 329.628;
-                    }, 500);
-                    setTimeout(() => {
-                        g.gain.setTargetAtTime(0, c.currentTime, .1);
-                        osc.frequency.value = 220;
-                    }, 700);
-                    setTimeout(() => {
-                        $("h1").removeClass("invisible");
-                        $("#correct-text").addClass("invisible");
-                    }, 1000);
-                    currentNumOfNotes++;
-                    setTimeout(() => {
-                        if (currentNumOfNotes >= 20) return;
+                        g.gain.setTargetAtTime(.65, c.currentTime, .15);
+                        osc.frequency.value = 155.56;
 
-                        song = setInterval(playSequence, 400);
-                    }, 600);
-                }
+                        $("h1").addClass("invisible");
+                        $("#wrong-text").removeClass("invisible");
+                        setTimeout(() => {
+                            $("h1").removeClass("invisible");
+                            $("#wrong-text").addClass("invisible");
+                        }, 500);
+                        setTimeout(() => {
+                            if (currentNumOfNotes >= 20) return;
+
+                            song = setInterval(playSequence, 400);
+                        }, 400);
+                        return;
+                    }
+
+                    let isSame = (playerSequence.length == sequenceToRepeat.length) && playerSequence.every((frequency, index) => {
+                        return frequency === sequenceToRepeat[index];
+                    });
+
+                    if (isSame && tonesPressed === sequenceToRepeat.length) {
+                        g.gain.setTargetAtTime(0, c.currentTime + .25, .15);
+                        $("#blocker").css("z-index", "99");
+                        setTimeout(() => {
+                            $("h1").addClass("invisible");
+                            $("#correct-text").removeClass("invisible");
+                            osc.type = "sine";
+                            g.gain.setTargetAtTime(.65, c.currentTime, .1);
+                            osc.frequency.value = 329.628;
+                        }, 500);
+                        setTimeout(() => {
+                            g.gain.setTargetAtTime(0, c.currentTime, .1);
+                            osc.frequency.value = 220;
+                        }, 700);
+                        setTimeout(() => {
+                            $("h1").removeClass("invisible");
+                            $("#correct-text").addClass("invisible");
+                        }, 1000);
+                        currentNumOfNotes++;
+                        setTimeout(() => {
+                            if (currentNumOfNotes >= 20) return;
+
+                            song = setInterval(playSequence, 400);
+                        }, 600);
+                    }
+                    
+                } else return;
             });
 
         } else {
+            currentNumOfNotes = 0;
+            currentSeqInd = 0;
+            tonesPressed = 0;
+            sequenceToRepeat = [];
+
             $("#blocker").css("z-index", "-1");
             for (let i = 1; i < 99999; i++) window.clearInterval(i); // Hack-ish solution to stopping interval song interval.
             osc.stop(0);
