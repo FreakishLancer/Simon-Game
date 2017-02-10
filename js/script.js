@@ -163,7 +163,7 @@ $(document).ready(() => {
                     setTimeout(() => {
                         $("h1").removeClass("invisible");
                         $("#wrong-text").addClass("invisible");
-                    }, 600);
+                    }, 500);
                     setTimeout(() => {
                         if (currentNumOfNotes >= 20) return;
 
@@ -177,21 +177,21 @@ $(document).ready(() => {
                 });
 
                 if (isSame && tonesPressed === sequenceToRepeat.length) {
-                    $("h1").addClass("invisible");
-                    $("#correct-text").removeClass("invisible");
                     setTimeout(() => {
-                        osc.type = "square";
-                        g.gain.setTargetAtTime(0, c.currentTime, .15);
+                        $("h1").addClass("invisible");
+                        $("#correct-text").removeClass("invisible");
+                        osc.type = "sine";
+                        g.gain.setTargetAtTime(.65, c.currentTime, .1);
                         osc.frequency.value = 329.628;
-                    }, 400);
+                    }, 500);
                     setTimeout(() => {
-                        g.gain.setTargetAtTime(0, c.currentTime, .15);
+                        g.gain.setTargetAtTime(0, c.currentTime, .1);
                         osc.frequency.value = 220;
-                    }, 600);
+                    }, 700);
                     setTimeout(() => {
                         $("h1").removeClass("invisible");
                         $("#correct-text").addClass("invisible");
-                    }, 800);
+                    }, 1000);
                     currentNumOfNotes++;
                     setTimeout(() => {
                         if (currentNumOfNotes >= 20) return;
