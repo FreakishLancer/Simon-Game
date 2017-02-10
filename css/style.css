@@ -14,6 +14,7 @@ body {
   top: 0;
   opacity: 0;
   background-color: white;
+  cursor: wait;
   z-index: -1; }
 
 main {
@@ -43,10 +44,10 @@ main {
   background: linear-gradient(to right top, lightgray, white); }
 
 #round-num {
-  font: bold 3vmin Exo, sans-serif;
+  font: 3vmin "Ubuntu Mono", sans-serif;
   position: absolute;
   top: 7.5%;
-  left: 41%;
+  left: 43%;
   padding: .4vmin .5vmin;
   border-radius: 25%;
   background: black;
@@ -98,28 +99,28 @@ button {
     cursor: pointer; }
 
 [data-color="red"] {
-  background: linear-gradient(to right top, #ff5e5e, #b41313);
+  background: linear-gradient(to left top, #ff5e5e, #b41313);
   border-radius: 0 100% 0 0; }
   [data-color="red"]:hover {
-    background: linear-gradient(to right top, #ffa9a9, #b41313); }
+    background: linear-gradient(to left top, white, #b41313); }
 
 [data-color="green"] {
-  background: linear-gradient(to left top, #4ed44e, #038903);
+  background: linear-gradient(to left bottom, #4ed44e, #038903);
   border-radius: 100% 0 0 0; }
   [data-color="green"]:hover {
-    background: linear-gradient(to left top, #99ff99, #038903); }
+    background: linear-gradient(to left bottom, white, #038903); }
 
 [data-color="blue"] {
-  background: linear-gradient(to right bottom, #6c53bd, #210872);
+  background: linear-gradient(to right top, #6c53bd, #210872);
   border-radius: 0 0 100% 0; }
   [data-color="blue"]:hover {
-    background: linear-gradient(to right bottom, #b79eff, #210872); }
+    background: linear-gradient(to right top, white, #210872); }
 
 [data-color="yellow"] {
-  background: linear-gradient(to left bottom, #ffe35e, #b49813);
+  background: linear-gradient(to right bottom, #ffe35e, #b49813);
   border-radius: 0 0 0 100%; }
   [data-color="yellow"]:hover {
-    background: linear-gradient(to left bottom, #ffffa9, #b49813); }
+    background: linear-gradient(to right bottom, white, #b49813); }
 
 .darkened {
   opacity: .65; }

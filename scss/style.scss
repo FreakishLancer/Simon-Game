@@ -22,6 +22,7 @@ body {
     top: 0;
     opacity: 0;
     background-color: white;
+    cursor: wait;
     z-index: -1;
 }
 
@@ -56,10 +57,10 @@ main {
 }
 
 #round-num {
-    font: bold 3vmin Exo, sans-serif;
+    font: 3vmin "Ubuntu Mono", sans-serif;
     position: absolute;
     top: 7.5%;
-    left: 41%;
+    left: 43%;
     padding: .4vmin .5vmin;
     border-radius: 25%;
 
@@ -124,38 +125,38 @@ button {
 }
 
 [data-color="red"] {
-    background: linear-gradient(to right top, $red, $red - 75);
+    background: linear-gradient(to left top, $red, $red - 75);
     border-radius: 0 100% 0 0;
 
     &:hover {
-        background: linear-gradient(to right top, $red + 75, $red - 75);
+        background: linear-gradient(to left top, $red + 200, $red - 75);
     }
 }
 
 [data-color="green"] {
-    background: linear-gradient(to left top, $green, $green - 75);
+    background: linear-gradient(to left bottom, $green, $green - 75);
     border-radius: 100% 0 0 0;
 
     &:hover {
-        background: linear-gradient(to left top, $green + 75, $green - 75);
+        background: linear-gradient(to left bottom, $green + 200, $green - 75);
     }
 }
 
 [data-color="blue"] {
-    background: linear-gradient(to right bottom, $blue, $blue - 75);
+    background: linear-gradient(to right top, $blue, $blue - 75);
     border-radius: 0 0 100% 0;
 
     &:hover {
-        background: linear-gradient(to right bottom, $blue + 75, $blue - 75);
+        background: linear-gradient(to right top, $blue + 200, $blue - 75);
     }
 }
 
 [data-color="yellow"] {
-    background: linear-gradient(to left bottom, $yellow, $yellow - 75);
+    background: linear-gradient(to right bottom, $yellow, $yellow - 75);
     border-radius: 0 0 0 100%;
 
     &:hover {
-        background: linear-gradient(to left bottom, $yellow + 75, $yellow - 75);
+        background: linear-gradient(to right bottom, $yellow + 200, $yellow - 75);
     }
 }
 

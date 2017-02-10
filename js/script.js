@@ -18,11 +18,22 @@ let conv;
 let osc;
 let g;
 
-function newSequence() {
+function newSequence() { // Non-consecutive tones.
     let musicSequence = [];
+    let prevTone = getRandomInt(1, 4);
+    let nextTone;
     for (i = 0; i < 20; i++) {
-        musicSequence.push(randomFlag[getRandomInt(1, 4)].data("frequency"));
+        musicSequence.push(randomFlag[prevTone].data("frequency"));
+
+        nextTone = getRandomInt(1, 4);
+        if (prevTone === nextTone) {
+            while (prevTone === nextTone) {
+                nextTone = getRandomInt(1, 4);
+            }
+        }
+        prevTone = nextTone;
     }
+    console.log(musicSequence);
     return musicSequence;
 }
 
@@ -33,7 +44,7 @@ function getRandomInt(min, max) {
 }
 
 function readySoundMaker() { // Prepares a muted oscillator.
-    c = new AudioContext();
+    c = new window.AudioContext || window.webkitAudioContext;
     osc = c.createOscillator();
     g = c.createGain();
     osc.type = "triangle";
@@ -54,9 +65,9 @@ $(document).ready(() => {
         $(button.target).removeClass("darkened");
         if (!powerOn) {
             osc.frequency.value = $(button.target).data("frequency");
-            g.gain.setTargetAtTime(.5, c.currentTime, .15);
+            g.gain.setTargetAtTime(.75, c.currentTime, .15);
             $(button.target).on("mouseup", button => {
-                g.gain.setTargetAtTime(0, c.currentTime, .15);
+                g.gain.setTargetAtTime(0, c.currentTime + .15, .15);
                 $(button.target).addClass("darkened");
             });
         } else {
@@ -76,30 +87,55 @@ $(document).ready(() => {
 
     $("#power").on("click", () => {
         if (!powerOn) {
-            osc.stop();
+            osc.stop(0);
             readySoundMaker();
             $("#blocker").css("z-index", "99");
-            $("#blocker").css("cursor", "wait");
             $(".quarter-circle").removeClass("darkened");
             $("#strict-mode").prop("disabled", true);
             powerOn = true;
 
             let musicSequence = newSequence();
+            let isCorrectSequence;
+            let i = 0;
+            let song = setInterval(playSequence, 400);
 
-            for (let i = 0; i < musicSequence.length; i++) {
-                for (let j = 0; j < i; j++) {
-                    
+            function playSequence() {
+                i < 9 ? $("#round-num").text(`0${i + 1}`) : $("#round-num").text(`${i + 1}`);
+                
+                g.gain.setTargetAtTime(.75, c.currentTime, .15);
+                osc.frequency.value = musicSequence[i];
+                $(".quarter-circle:not(.darkened)").addClass("darkened");
+                $(`.quarter-circle[data-frequency*="${musicSequence[i]}"]`).removeClass("darkened");
+                i++;
+                if (i >= 5) {
+                    clearInterval(song);
+                    setTimeout(() => {
+                        $(".quarter-circle:not(.darkened)").addClass("darkened");
+                        $("#blocker").css("z-index", "-1");
+                    }, 500);
+                    g.gain.setTargetAtTime(0, c.currentTime + .5, .15);
+
+                    $(".quarter-circle").on("mousedown", button => {
+                        $(".quarter-circle").not(button.target).addClass("darkened");
+                        $(button.target).removeClass("darkened");
+                        osc.frequency.value = $(button.target).data("frequency");
+                        g.gain.setTargetAtTime(.75, c.currentTime, .15);
+
+                        $(button.target).on("mouseup", button => {
+                            g.gain.setTargetAtTime(0, c.currentTime + .15, .15);
+                            $(button.target).addClass("darkened");
+                        });
+                    });
                 }
             }
-
-
 
         } else {
             $("#blocker").css("z-index", "-1");
             for (let i = 1; i < 99999; i++) window.clearInterval(i); // Hack-ish solution to stopping interval song interval.
-            osc.stop();
+            osc.stop(0);
             $(".quarter-circle").addClass("darkened");
             $("#strict-mode").prop("disabled", false);
+            $("#round-num").text("00");
             powerOn = false;
             readySoundMaker();
         }
