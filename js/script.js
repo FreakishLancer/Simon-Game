@@ -18,6 +18,9 @@ let conv;
 let osc;
 let g;
 
+let currentSeqInd;
+let currentNumOfNotes;
+
 function newSequence() { // Non-consecutive tones.
     let musicSequence = [];
     let prevTone = getRandomInt(1, 4);
@@ -95,23 +98,34 @@ $(document).ready(() => {
             powerOn = true;
 
             let musicSequence = newSequence();
-            let isCorrectSequence;
-            let i = 0;
-            let currentNumOfNotes = 0;
+            let sequenceToRepeat = [];
+            let tonesPressed = 0;
+            let playerSequence = [];
+
+            currentNumOfNotes = 0;
+            currentSeqInd = 0;
 
             let song = setInterval(playSequence, 400);
 
             function playSequence() {
-                i < 9 ? $("#round-num").text(`0${i + 1}`) : $("#round-num").text(`${i + 1}`);
+                $("#blocker").css("z-index", "99");
+                currentSeqInd < 9 ? $("#round-num").text(`0${currentSeqInd + 1}`) : $("#round-num").text(`${currentSeqInd + 1}`);
                 
+                osc.type = "triangle";
                 g.gain.setTargetAtTime(.65, c.currentTime, .15);
-                osc.frequency.value = musicSequence[i];
+                osc.frequency.value = musicSequence[currentSeqInd];
                 $(".quarter-circle:not(.darkened)").addClass("darkened");
-                $(`.quarter-circle[data-frequency*="${musicSequence[i]}"]`).removeClass("darkened");
-                i++;
-                if (i > currentNumOfNotes) { // Needs to be variable.
+                $(`.quarter-circle[data-frequency*="${musicSequence[currentSeqInd]}"]`).removeClass("darkened");
+
+                currentSeqInd++;
+                tonesPressed = 0;
+                playerSequence = [];
+
+                if (currentSeqInd > currentNumOfNotes) {
                     clearInterval(song);
-                    i = 0;
+                    sequenceToRepeat = musicSequence.slice(0, currentSeqInd);
+                    console.log(sequenceToRepeat);
+                    currentSeqInd = 0;
                     setTimeout(() => {
                         $(".quarter-circle:not(.darkened)").addClass("darkened");
                         $("#blocker").css("z-index", "-1");
@@ -121,20 +135,53 @@ $(document).ready(() => {
             }
 
             $(".quarter-circle").on("mousedown", button => {
-                currentNumOfNotes++;
-                song = setInterval(playSequence, 400);
+                {
+                    $(".quarter-circle").not(button.target).addClass("darkened");
+                    $(button.target).removeClass("darkened");
+                    osc.frequency.value = $(button.target).data("frequency");
+                    g.gain.setTargetAtTime(.65, c.currentTime, .15);
+
+                    $(button.target).on("mouseup", button => {
+                        g.gain.setTargetAtTime(0, c.currentTime + .15, .15);
+                        $(button.target).addClass("darkened");
+                    });
+                }
+                tonesPressed++;
+
+                playerSequence.push($(button.target).data("frequency"));
 
 
 
-                // $(".quarter-circle").not(button.target).addClass("darkened");
-                // $(button.target).removeClass("darkened");
-                // osc.frequency.value = $(button.target).data("frequency");
-                // g.gain.setTargetAtTime(.65, c.currentTime, .15);
+                if (playerSequence[tonesPressed - 1] !== sequenceToRepeat[tonesPressed - 1]) {
+                    console.log("WRONG");
+                    osc.type = "sine";
+                    g.gain.setTargetAtTime(.65, c.currentTime, .15);
+                    osc.frequency.value = 155.56;
 
-                // $(button.target).on("mouseup", button => {
-                //     g.gain.setTargetAtTime(0, c.currentTime + .15, .15);
-                //     $(button.target).addClass("darkened");
-                // });
+                    $("h1").text("WRONG!").addClass("warning-text");
+                    setTimeout(() => {
+                        $("h1").text("SIMON").removeClass("warning-text");
+                    }, 600);
+                    setTimeout(() => {
+                        if (currentNumOfNotes >= 20) return;
+
+                        song = setInterval(playSequence, 400);
+                    }, 400);
+                    return;
+                }
+
+                let isSame = (playerSequence.length == sequenceToRepeat.length) && playerSequence.every((frequency, index) => {
+                    return frequency === sequenceToRepeat[index];
+                });
+
+                if (isSame && tonesPressed === sequenceToRepeat.length) {
+                    currentNumOfNotes++;
+                    setTimeout(() => {
+                        if (currentNumOfNotes >= 20) return;
+
+                        song = setInterval(playSequence, 400);
+                    }, 400);
+                }
             });
 
         } else {
