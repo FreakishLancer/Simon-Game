@@ -76,7 +76,11 @@ h1, .game-text {
 }
 
 h1 {
-    left: 27.5%;
+    left: 25.5%;
+
+    sup {
+        font-size: 2vmin;
+    }
 }
 
 #wrong-text {

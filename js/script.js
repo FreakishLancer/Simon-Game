@@ -93,9 +93,9 @@ $(document).ready(() => {
         if (!powerOn) {
             osc.stop(0);
             readySoundMaker();
+            $("#power").text("Playing");
             $("#blocker").css("z-index", "99");
             $(".quarter-circle").removeClass("darkened");
-            $("#strict-mode").prop("disabled", true);
             powerOn = true;
 
             let musicSequence = newSequence();
@@ -156,6 +156,11 @@ $(document).ready(() => {
                     playerSequence.push($(button.target).data("frequency"));
 
                     if (playerSequence[tonesPressed - 1] !== sequenceToRepeat[tonesPressed - 1]) {
+                        if (isStrictMode) {
+                            currentNumOfNotes = 0;
+                            musicSequence = newSequence();
+                        }
+
                         g.gain.setTargetAtTime(0, c.currentTime + .3, .15);
                         $("#blocker").css("z-index", "99");
                         osc.type = "sine";
@@ -218,8 +223,8 @@ $(document).ready(() => {
             $("#blocker").css("z-index", "-1");
             for (let i = 1; i < 99999; i++) window.clearInterval(i); // Hack-ish solution to stopping interval song interval.
             osc.stop(0);
+            $("#power").text("Play");
             $(".quarter-circle").addClass("darkened");
-            $("#strict-mode").prop("disabled", false);
             $("#round-num").text("00");
             powerOn = false;
             readySoundMaker();
