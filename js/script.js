@@ -66,7 +66,7 @@ $(document).ready(() => {
     $("#power").prop("disabled", false);
     
     $(() => {
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"], [data-toggle="button"]').tooltip();
     });
 
     $(".quarter-circle").on("mousedown", button => {
@@ -98,9 +98,9 @@ $(document).ready(() => {
         if (!powerOn) {
             powerOn = true;
             $("#power").text("Playing").prop("disabled", true).css("background", "lightgreen");
-            $("#blocker").css("z-index", "99");
+            $("#blocker, #reset-blocker").css("z-index", "99");
             $(".quarter-circle").removeClass("darkened");
-            $("#reset").removeClass("invisible");
+            $("#reset").addClass("invisible");
 
             let musicSequence = newSequence();
             sequenceToRepeat = [];
@@ -109,13 +109,14 @@ $(document).ready(() => {
             currentNumOfNotes = 0;
             currentSeqInd = 0;
             tonesPressed = 0;
-
+            
             let song = setInterval(playSequence, 400);
 
             function playSequence() {
                 currentSeqInd < 9 ? $("#round-num").text(`0${currentSeqInd + 1}`) : $("#round-num").text(`${currentSeqInd + 1}`);
                 
-                $("#blocker").css("z-index", "99");
+                $("#blocker, #reset-blocker").css("z-index", "99");
+                $("#reset").addClass("invisible")
                 osc.type = "triangle";
                 g.gain.setTargetAtTime(.65, c.currentTime, .15);
                 osc.frequency.value = musicSequence[currentSeqInd];
@@ -129,11 +130,11 @@ $(document).ready(() => {
                 if (currentSeqInd > currentNumOfNotes) {
                     clearInterval(song);
                     sequenceToRepeat = musicSequence.slice(0, currentSeqInd);
-                    console.log(sequenceToRepeat);
                     currentSeqInd = 0;
                     setTimeout(() => {
                         $(".quarter-circle:not(.darkened)").addClass("darkened");
-                        $("#blocker").css("z-index", "-1");
+                        $("#blocker, #reset-blocker").css("z-index", "-1");
+                        $("#reset").removeClass("invisible");
                     }, 400);
                     g.gain.setTargetAtTime(0, c.currentTime + .5, .15);
                 }
@@ -162,7 +163,8 @@ $(document).ready(() => {
                         }
 
                         g.gain.setTargetAtTime(0, c.currentTime + .3, .15);
-                        $("#blocker").css("z-index", "99");
+                        $("#blocker, #reset-blocker").css("z-index", "99");
+                        $("#reset").addClass("invisible");
                         osc.type = "sine";
                         g.gain.setTargetAtTime(.65, c.currentTime, .15);
                         osc.frequency.value = 155.56;
@@ -185,7 +187,8 @@ $(document).ready(() => {
 
                     if (isSame && tonesPressed === sequenceToRepeat.length) {
                         g.gain.setTargetAtTime(0, c.currentTime + .25, .15);
-                        $("#blocker").css("z-index", "99");
+                        $("#blocker, #reset-blocker").css("z-index", "99");
+                        $("#reset").addClass("invisible");
                         setTimeout(() => {
                             $("h1").addClass("invisible");
                             $("#correct-text").removeClass("invisible");
@@ -206,7 +209,8 @@ $(document).ready(() => {
                         setTimeout(() => {
                             if (currentNumOfNotes >= 19) {
                                 g.gain.setTargetAtTime(0, c.currentTime + .25, .15);
-                                $("#blocker").css("z-index", "99");
+                                $("#blocker, #reset-blocker").css("z-index", "99");
+                                $("#reset").addClass("invisible");
                                 setTimeout(() => {
                                     $("h1").addClass("invisible");
                                     $("#win-text").removeClass("invisible");
@@ -222,6 +226,7 @@ $(document).ready(() => {
                                     $("h1").removeClass("invisible");
                                     $("#win-text").addClass("invisible");
                                 }, 1200);
+                                $("#reset").addClass("invisible");
                                 currentNumOfNotes = 0;
                                 musicSequence = newSequence();
                                 song = setInterval(playSequence, 400);
@@ -234,7 +239,9 @@ $(document).ready(() => {
                 } else return;
             });
 
-            $("#reset").on("click", () => {
+            $("#reset").on("mousedown", () => {
+                $("#blocker, #reset-blocker").css("z-index", "99");
+                $("#reset").addClass("invisible");
                 currentNumOfNotes = 0;
                 musicSequence = newSequence();
                 song = setInterval(playSequence, 400);

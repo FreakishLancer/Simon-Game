@@ -56,13 +56,13 @@ main {
     background: linear-gradient(to right top, lightgray, white);
 }
 
-#reset, #round-num {
+#reset, #reset-blocker, #round-num {
     position: absolute;
 }
 
-#reset {
-    height: 1vmin;
-    width: 1vmin;
+#reset, #reset-blocker {
+    height: 2vmin;
+    width: 2vmin;
     top: 78.9%;
     left: 72%;
     transition-duration: .3s;
@@ -71,6 +71,10 @@ main {
         cursor: pointer;
         font-size: 2vmin;
     }
+}
+
+#reset-blocker {
+    z-index: -1;
 }
 
 #round-num {
