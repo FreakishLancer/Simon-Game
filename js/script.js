@@ -91,8 +91,6 @@ $(document).ready(() => {
 
     $("#power").on("click", () => {
         if (!powerOn) {
-            osc.stop(0);
-            readySoundMaker();
             $("#power").text("Playing");
             $("#blocker").css("z-index", "99");
             $(".quarter-circle").removeClass("darkened");
@@ -174,8 +172,6 @@ $(document).ready(() => {
                             $("#wrong-text").addClass("invisible");
                         }, 500);
                         setTimeout(() => {
-                            if (currentNumOfNotes >= 20) return;
-
                             song = setInterval(playSequence, 400);
                         }, 400);
                         return;
@@ -203,11 +199,33 @@ $(document).ready(() => {
                             $("h1").removeClass("invisible");
                             $("#correct-text").addClass("invisible");
                         }, 1000);
+
                         currentNumOfNotes++;
                         setTimeout(() => {
-                            if (currentNumOfNotes >= 20) return;
-
-                            song = setInterval(playSequence, 400);
+                            if (currentNumOfNotes >= 19) {
+                                g.gain.setTargetAtTime(0, c.currentTime + .25, .15);
+                                $("#blocker").css("z-index", "99");
+                                setTimeout(() => {
+                                    $("h1").addClass("invisible");
+                                    $("#win-text").removeClass("invisible");
+                                    osc.type = "sine";
+                                    g.gain.setTargetAtTime(.65, c.currentTime, .1);
+                                    osc.frequency.value = 329.628;
+                                }, 500);
+                                setTimeout(() => {
+                                    g.gain.setTargetAtTime(0, c.currentTime, .1);
+                                    osc.frequency.value = 220;
+                                }, 900);
+                                setTimeout(() => {
+                                    $("h1").removeClass("invisible");
+                                    $("#win-text").addClass("invisible");
+                                }, 1200);
+                                currentNumOfNotes = 0;
+                                musicSequence = newSequence();
+                                song = setInterval(playSequence, 400);
+                                return;
+                            }
+                            else song = setInterval(playSequence, 400);
                         }, 600);
                     }
                     
@@ -215,19 +233,13 @@ $(document).ready(() => {
             });
 
         } else {
-            currentNumOfNotes = 0;
-            currentSeqInd = 0;
-            tonesPressed = 0;
-            sequenceToRepeat = [];
-
+            g.gain.value = 0;
             $("#blocker").css("z-index", "-1");
             for (let i = 1; i < 99999; i++) window.clearInterval(i); // Hack-ish solution to stopping interval song interval.
-            osc.stop(0);
             $("#power").text("Play");
             $(".quarter-circle").addClass("darkened");
             $("#round-num").text("00");
             powerOn = false;
-            readySoundMaker();
         }
     });
 });
