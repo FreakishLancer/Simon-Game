@@ -63,6 +63,11 @@ readySoundMaker();
 $(document).ready(() => {
 
     $(".quarter.circle").css("transition-duration", ".1s"); // Stops weird border-radius transition before script is loaded.
+    $("#power").prop("disabled", false);
+    
+    $(() => {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 
     $(".quarter-circle").on("mousedown", button => {
         $(".quarter-circle").not(button.target).addClass("darkened");
@@ -91,10 +96,11 @@ $(document).ready(() => {
 
     $("#power").on("click", () => {
         if (!powerOn) {
-            $("#power").text("Playing");
+            powerOn = true;
+            $("#power").text("Playing").prop("disabled", true).css("background", "lightgreen");
             $("#blocker").css("z-index", "99");
             $(".quarter-circle").removeClass("darkened");
-            powerOn = true;
+            $("#reset").removeClass("invisible");
 
             let musicSequence = newSequence();
             sequenceToRepeat = [];
@@ -109,14 +115,12 @@ $(document).ready(() => {
             function playSequence() {
                 currentSeqInd < 9 ? $("#round-num").text(`0${currentSeqInd + 1}`) : $("#round-num").text(`${currentSeqInd + 1}`);
                 
-                {
-                    $("#blocker").css("z-index", "99");
-                    osc.type = "triangle";
-                    g.gain.setTargetAtTime(.65, c.currentTime, .15);
-                    osc.frequency.value = musicSequence[currentSeqInd];
-                    $(".quarter-circle:not(.darkened)").addClass("darkened");
-                    $(`.quarter-circle[data-frequency*="${musicSequence[currentSeqInd]}"]`).removeClass("darkened");
-                }
+                $("#blocker").css("z-index", "99");
+                osc.type = "triangle";
+                g.gain.setTargetAtTime(.65, c.currentTime, .15);
+                osc.frequency.value = musicSequence[currentSeqInd];
+                $(".quarter-circle:not(.darkened)").addClass("darkened");
+                $(`.quarter-circle[data-frequency*="${musicSequence[currentSeqInd]}"]`).removeClass("darkened");
 
                 currentSeqInd++;
                 tonesPressed = 0;
@@ -137,17 +141,15 @@ $(document).ready(() => {
 
             $(".quarter-circle").on("mousedown", button => {
                 if (powerOn) {
-                    {
-                        $(".quarter-circle").not(button.target).addClass("darkened");
-                        $(button.target).removeClass("darkened");
-                        osc.frequency.value = $(button.target).data("frequency");
-                        g.gain.setTargetAtTime(.65, c.currentTime, .15);
+                    $(".quarter-circle").not(button.target).addClass("darkened");
+                    $(button.target).removeClass("darkened");
+                    osc.frequency.value = $(button.target).data("frequency");
+                    g.gain.setTargetAtTime(.65, c.currentTime, .15);
 
-                        $(button.target).on("mouseup", button => {
-                            g.gain.setTargetAtTime(0, c.currentTime + .15, .15);
-                            $(button.target).addClass("darkened");
-                        });
-                    }
+                    $(button.target).on("mouseup", button => {
+                        g.gain.setTargetAtTime(0, c.currentTime + .15, .15);
+                        $(button.target).addClass("darkened");
+                    });
 
                     tonesPressed++;
 
@@ -232,14 +234,11 @@ $(document).ready(() => {
                 } else return;
             });
 
-        } else {
-            g.gain.value = 0;
-            $("#blocker").css("z-index", "-1");
-            for (let i = 1; i < 99999; i++) window.clearInterval(i); // Hack-ish solution to stopping interval song interval.
-            $("#power").text("Play");
-            $(".quarter-circle").addClass("darkened");
-            $("#round-num").text("00");
-            powerOn = false;
+            $("#reset").on("click", () => {
+                currentNumOfNotes = 0;
+                musicSequence = newSequence();
+                song = setInterval(playSequence, 400);
+            });
         }
     });
 });

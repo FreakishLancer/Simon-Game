@@ -56,16 +56,31 @@ main {
     background: linear-gradient(to right top, lightgray, white);
 }
 
+#reset, #round-num {
+    position: absolute;
+}
+
+#reset {
+    height: 1vmin;
+    width: 1vmin;
+    top: 78.9%;
+    left: 72%;
+    transition-duration: .3s;
+
+    &:hover {
+        cursor: pointer;
+        font-size: 2vmin;
+    }
+}
+
 #round-num {
     font: 3vmin "Ubuntu Mono", sans-serif;
-    position: absolute;
-    top: 7.5%;
-    left: 43%;
     padding: .4vmin .5vmin;
     border-radius: 25%;
-
     background: black;
     color: white;
+    top: 7.5%;
+    left: 43%;
 }
 
 h1, .game-text {
